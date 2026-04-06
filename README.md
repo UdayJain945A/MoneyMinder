@@ -1,6 +1,5 @@
 
-MoneyMinder is a modern, intuitive, and feature-rich Android application designed to help you take control of your personal finances. Built with Jetpack Compose and following clean architecture principles, it offers a seamless experience for tracking transactions, m<img width="1080" height="2340" alt="Screenshot_20260406_152108" src="https://github.com/user-attachments/assets/8711bd69-6911-49df-b70b-5a9f8c80fa5c" />
-anaging budgets, and reaching your savings goals.
+MoneyMinder is a modern, intuitive, and feature-rich Android application designed to help you take control of your personal finances. Built with Jetpack Compose and following clean architecture principles, it offers a seamless experience for tracking transactions, managing budgets, and reaching your savings goals.
 
 ## ✨ Features
 
@@ -43,7 +42,10 @@ anaging budgets, and reaching your savings goals.
 4. Run the app on your device or emulator.
 
 ## 📸 Screenshots
-<img width="108" height="23" alt="Screenshot_20260406_152108" src="https://github.com/user-attachments/assets/665892de-f643-4b7f-8a9c-7134225c2c72" />
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/665892de-f643-4b7f-8a9c-7134225c2c72" width="250"/>
+</p>
 
 
 
