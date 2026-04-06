@@ -49,13 +49,20 @@ class HomeViewModel @Inject constructor(
             val weeklySpending = calculateWeeklySpending(transactions)
 
             // Current Month Spending
-            val currentMonthExpense = transactions.filter {
+            val currentMonthTransactions = transactions.filter {
                 val cal = Calendar.getInstance()
                 cal.timeInMillis = it.date
-                it.type == TransactionType.EXPENSE && 
                 cal.get(Calendar.MONTH) + 1 == month && 
                 cal.get(Calendar.YEAR) == year
-            }.sumOf { it.amount }
+            }
+            
+            val currentMonthIncome = currentMonthTransactions
+                .filter { it.type == TransactionType.INCOME }
+                .sumOf { it.amount }
+                
+            val currentMonthExpense = currentMonthTransactions
+                .filter { it.type == TransactionType.EXPENSE }
+                .sumOf { it.amount }
 
             HomeState(
                 balance = totalIncome - totalExpense,
@@ -63,7 +70,9 @@ class HomeViewModel @Inject constructor(
                 totalExpense = totalExpense,
                 recentTransactions = transactions.take(5),
                 savingsGoal = goal?.targetAmount ?: 0.0,
-                savingsProgress = if (goal != null && goal.targetAmount > 0) (totalIncome - totalExpense).coerceAtLeast(0.0) / goal.targetAmount else 0.0,
+                savingsProgress = if (goal != null && goal.targetAmount > 0) {
+                    (currentMonthIncome - currentMonthExpense).coerceAtLeast(0.0) / goal.targetAmount
+                } else 0.0,
                 noSpendStreak = streak,
                 weeklySpending = weeklySpending,
                 monthlyBudget = budget?.monthlyLimit ?: 0.0,

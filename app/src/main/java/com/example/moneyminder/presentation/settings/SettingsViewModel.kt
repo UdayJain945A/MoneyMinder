@@ -42,6 +42,19 @@ class SettingsViewModel @Inject constructor(
             initialValue = "USD"
         )
 
+    val userName: StateFlow<String?> = preferenceManager.userName
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = null
+        )
+
+    fun setUserName(name: String) {
+        viewModelScope.launch {
+            preferenceManager.setUserName(name)
+        }
+    }
+
     fun toggleTheme(isDark: Boolean) {
         viewModelScope.launch {
             preferenceManager.setThemeMode(isDark)

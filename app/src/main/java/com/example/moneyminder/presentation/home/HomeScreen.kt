@@ -121,14 +121,14 @@ fun BalanceCard(balance: Double, income: Double, expense: Double, currency: Stri
                     amount = income,
                     color = Color(0xFFC8E6C9),
                     currencySymbol = currencySymbol,
-                    icon = Icons.Default.ArrowDownward
+                    icon = Icons.Default.ArrowUpward
                 )
                 SummaryColumn(
                     label = "Expenses",
                     amount = expense,
                     color = Color(0xFFFFCDD2),
                     currencySymbol = currencySymbol,
-                    icon = Icons.Default.ArrowUpward
+                    icon = Icons.Default.ArrowDownward
                 )
             }
         }
@@ -184,7 +184,7 @@ fun NoSpendStreakCard(streak: Int, modifier: Modifier = Modifier) {
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer)
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(25.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -217,7 +217,7 @@ fun SavingsGoalMiniCard(progress: Float, modifier: Modifier = Modifier) {
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(25.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -358,6 +358,9 @@ fun HomeScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val voiceState by voiceViewModel.state.collectAsState()
+    val settingsViewModel: com.example.moneyminder.presentation.settings.SettingsViewModel = hiltViewModel()
+    val userName by settingsViewModel.userName.collectAsState()
+
     val modelProducer = remember { CartesianChartModelProducer() }
 
     var transactionToDelete by remember { mutableStateOf<com.example.moneyminder.domain.model.Transaction?>(null) }
@@ -411,12 +414,27 @@ fun HomeScreen(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             CenterAlignedTopAppBar(
-                title = { 
-                    Text(
-                        "MoneyMinder", 
-                        fontWeight = FontWeight.ExtraBold,
-                        style = MaterialTheme.typography.headlineMedium
-                    ) 
+                title = {
+                    if (!userName.isNullOrEmpty()) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(
+                                "Hello, $userName",
+                                fontWeight = FontWeight.Bold,
+                                style = MaterialTheme.typography.titleLarge
+                            )
+                            Text(
+                                "MoneyMinder",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    } else {
+                        Text(
+                            "MoneyMinder",
+                            fontWeight = FontWeight.ExtraBold,
+                            style = MaterialTheme.typography.headlineMedium
+                        )
+                    }
                 },
                 actions = {
                     IconButton(onClick = {

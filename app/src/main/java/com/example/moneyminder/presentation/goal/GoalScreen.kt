@@ -43,59 +43,86 @@ fun GoalScreen(
                 tint = MaterialTheme.colorScheme.primary
             )
 
-            Text(
-                text = "Set your monthly savings target",
-                style = MaterialTheme.typography.titleMedium
-            )
-
-            OutlinedTextField(
-                value = amountText,
-                onValueChange = { amountText = it },
-                label = { Text("Target Amount") },
-                prefix = { Text(getCurrencySymbol(state.currency)) },
-                modifier = Modifier.fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                singleLine = true
-            )
-
-            Button(
-                onClick = {
-                    amountText.toDoubleOrNull()?.let {
-                        viewModel.setGoal(it)
-                    }
-                },
-                modifier = Modifier.fillMaxWidth(),
-                enabled = amountText.isNotEmpty()
-            ) {
-                Text("Set Goal")
-            }
-
-            HorizontalDivider()
-
             state.goal?.let { goal ->
                 Card(
                     modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
                 ) {
-                    Column(modifier = Modifier.padding(16.dp)) {
+                    Column(
+                        modifier = Modifier.padding(24.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
                         Text(
-                            "Current Goal",
-                            style = MaterialTheme.typography.labelMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        Text(
-                            "${getCurrencySymbol(state.currency)}${String.format(Locale.US, "%.2f", goal.targetAmount)}",
-                            style = MaterialTheme.typography.headlineMedium,
-                            fontWeight = FontWeight.Bold
+                            "Current Monthly Goal",
+                            style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            "We'll track your progress on the Home dashboard.",
-                            style = MaterialTheme.typography.bodySmall
+                            "${getCurrencySymbol(state.currency)}${String.format(Locale.US, "%.2f", goal.targetAmount)}",
+                            style = MaterialTheme.typography.displaySmall,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                     }
                 }
+            } ?: run {
+                Text(
+                    text = "No goal set for this month",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
+
+            HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Text(
+                    text = if (state.goal == null) "Set your savings target" else "Update your target",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+
+                OutlinedTextField(
+                    value = amountText,
+                    onValueChange = { amountText = it },
+                    label = { Text("New Target Amount") },
+                    prefix = { Text(getCurrencySymbol(state.currency)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    singleLine = true,
+                    shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
+                )
+
+                Button(
+                    onClick = {
+                        amountText.toDoubleOrNull()?.let {
+                            viewModel.setGoal(it)
+                            amountText = ""
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    enabled = amountText.isNotEmpty(),
+                    shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
+                ) {
+                    Text(if (state.goal == null) "Set Goal" else "Update Goal", fontWeight = FontWeight.Bold)
+                }
+            }
+
+            Spacer(modifier = Modifier.weight(1f))
+            
+            Text(
+                "We'll track your progress on the Home dashboard based on your monthly income and expenses.",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
         }
     }
 }

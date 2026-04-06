@@ -43,13 +43,20 @@ class GoalViewModel @Inject constructor(
         val year = calendar.get(Calendar.YEAR)
 
         viewModelScope.launch {
-            repository.insertGoal(
-                Goal(
-                    targetAmount = amount,
-                    month = month,
-                    year = year
+            val existingGoal = state.value.goal
+            if (existingGoal != null) {
+                repository.updateGoal(
+                    existingGoal.copy(targetAmount = amount)
                 )
-            )
+            } else {
+                repository.insertGoal(
+                    Goal(
+                        targetAmount = amount,
+                        month = month,
+                        year = year
+                    )
+                )
+            }
         }
     }
 }

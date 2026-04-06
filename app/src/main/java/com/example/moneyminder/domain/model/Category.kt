@@ -18,5 +18,10 @@ enum class Category(val title: String, val color: Color) {
     GIFT("Gift", Color(0xFFFFEB3B)),
     INVESTMENT("Investment", Color(0xFF00BCD4)),
 
+    INTEREST_EARNED("Interest Earned", Color(0xFF009688)),
+    BONUS("Bonus", Color(0xFF8BC34A)),
+    REFUND("Refund", Color(0xFFF44336)),
+
+    // Others
     OTHERS("Others", Color(0xFF607D8B))
 }

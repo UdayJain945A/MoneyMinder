@@ -21,7 +21,10 @@ fun SettingsScreen(
     val uiState by viewModel.uiState.collectAsState()
     val currentCurrency by viewModel.currency.collectAsState()
     val notificationsEnabled by viewModel.notificationsEnabled.collectAsState()
+    val userName by viewModel.userName.collectAsState()
+    
     var showCurrencyDialog by remember { mutableStateOf(false) }
+    var showNameDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -41,6 +44,17 @@ fun SettingsScreen(
                 .padding(padding)
         ) {
             item {
+                SettingsSectionTitle("Profile")
+                SettingsClickableItem(
+                    title = if (userName.isNullOrEmpty()) "User Name" else userName!!,
+                    subtitle = if (userName.isNullOrEmpty()) "Set your name" else "",
+                    icon = Icons.Default.Person,
+                    onClick = { showNameDialog = true }
+                )
+            }
+
+            item {
+                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                 SettingsSectionTitle("Appearance")
                 SettingsToggleItem(
                     title = "Dark Mode",
@@ -76,6 +90,17 @@ fun SettingsScreen(
         }
     }
 
+    if (showNameDialog) {
+        NameEditDialog(
+            currentName = userName ?: "",
+            onDismiss = { showNameDialog = false },
+            onConfirm = {
+                viewModel.setUserName(it)
+                showNameDialog = false
+            }
+        )
+    }
+
     if (showCurrencyDialog) {
         CurrencySelectionDialog(
             currentCurrency = currentCurrency,
@@ -87,6 +112,34 @@ fun SettingsScreen(
         )
     }
 }
+
+@Composable
+fun NameEditDialog(
+    currentName: String,
+    onDismiss: () -> Unit,
+    onConfirm: (String) -> Unit
+) {
+    var name by remember { mutableStateOf(currentName) }
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Set Name") },
+        text = {
+            OutlinedTextField(
+                value = name,
+                onValueChange = { name = it },
+                label = { Text("Your Name") },
+                singleLine = true
+            )
+        },
+        confirmButton = {
+            TextButton(onClick = { onConfirm(name) }) { Text("Save") }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) { Text("Cancel") }
+        }
+    )
+}
+
 
 @Composable
 fun SettingsSectionTitle(title: String) {

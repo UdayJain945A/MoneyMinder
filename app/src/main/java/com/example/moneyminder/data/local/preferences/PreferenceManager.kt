@@ -47,9 +47,20 @@ class PreferenceManager @Inject constructor(@ApplicationContext context: Context
         }
     }
 
+    val userName: Flow<String?> = dataStore.data.map { preferences ->
+        preferences[USER_NAME]
+    }
+
+    suspend fun setUserName(name: String) {
+        dataStore.edit { preferences ->
+            preferences[USER_NAME] = name
+        }
+    }
+
     companion object {
         private val THEME_MODE = booleanPreferencesKey("theme_mode")
         private val CURRENCY_CODE = stringPreferencesKey("currency_code")
         private val NOTIFICATIONS_ENABLED = booleanPreferencesKey("notifications_enabled")
+        private val USER_NAME = stringPreferencesKey("user_name")
     }
 }
